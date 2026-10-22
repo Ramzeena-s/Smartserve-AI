@@ -327,4 +327,550 @@
             border: 1px solid #f0e4bb;
             color: #6e5b2c;
             padding: 14px 16px;
-            border-radius:
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        .loading-note {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 28px 18px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 800px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat {
+                padding: 17px 20px;
+            }
+
+            .stat-value {
+                font-size: 25px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 22px 5%;
+            }
+
+            main {
+                padding: 0 13px;
+            }
+
+            .nav-label {
+                display: none;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="nav">
+            <div class="brand">🌱 SmartServe <span>AI</span></div>
+            <div class="nav-label">
+                MACHINE LEARNING · FOOD WASTE MANAGEMENT
+            </div>
+        </div>
+
+        <div class="hero">
+            <h1>Smarter kitchens.<br>Less food waste.</h1>
+            <p>
+                Predict canteen food waste using machine learning.
+                Make better preparation decisions with data-driven estimates.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <div class="section-heading">
+            <h2>Your prediction dashboard</h2>
+            <p>Generate an estimate and review your recent predictions.</p>
+        </div>
+
+        <section class="stats" aria-label="Prediction statistics">
+            <div class="stat">
+                <div class="stat-label">Recent predictions</div>
+                <div class="stat-value" id="totalPredictions">0</div>
+                <div class="stat-note">
+                    Predictions made from this browser
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Average predicted waste</div>
+                <div class="stat-value" id="averageWaste">0.00 kg</div>
+                <div class="stat-note">
+                    Average of your saved recent predictions
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Prediction engine</div>
+                <div class="stat-value">Random Forest</div>
+                <div class="stat-note">
+                    Your trained machine learning model
+                </div>
+            </div>
+        </section>
+
+        <div class="section-heading">
+            <h2>Food waste analysis</h2>
+            <p>
+                Enter the details below to estimate food waste in kilograms.
+            </p>
+        </div>
+
+        <section class="layout">
+            <div class="panel">
+                <h3>Prediction inputs</h3>
+                <p class="panel-description">
+                    Use the expected meal count, kitchen conditions,
+                    previous waste, and food category.
+                </p>
+
+                <form id="predictionForm">
+                    <div class="form-grid">
+                        <div>
+                            <label for="date">Prediction date</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+
+                        <div>
+                            <label for="meals_served">Meals served</label>
+                            <input type="number" id="meals_served"
+                                   name="meals_served" min="1" max="10000"
+                                   value="200" required>
+                        </div>
+
+                        <div>
+                            <label for="kitchen_staff">Kitchen staff</label>
+                            <input type="number" id="kitchen_staff"
+                                   name="kitchen_staff" min="1" max="500"
+                                   value="10" required>
+                        </div>
+
+                        <div>
+                            <label for="temperature_C">Temperature (°C)</label>
+                            <input type="number" step="any"
+                                   id="temperature_C" name="temperature_C"
+                                   min="-20" max="60" value="28" required>
+                        </div>
+
+                        <div>
+                            <label for="humidity_percent">Humidity (%)</label>
+                            <input type="number" step="any"
+                                   id="humidity_percent"
+                                   name="humidity_percent"
+                                   min="0" max="100" value="65" required>
+                        </div>
+
+                        <div>
+                            <label for="past_waste_kg">Previous waste (kg)</label>
+                            <input type="number" step="any"
+                                   id="past_waste_kg" name="past_waste_kg"
+                                   min="0" value="30" required>
+                        </div>
+
+                        <div>
+                            <label for="special_event">Special event</label>
+                            <select id="special_event" name="special_event"
+                                    required>
+                                <option value="No" selected>No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="staff_experience">Staff experience</label>
+                            <select id="staff_experience"
+                                    name="staff_experience" required>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate" selected>
+                                    Intermediate
+                                </option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="waste_category">Food category</label>
+                            <select id="waste_category" name="waste_category"
+                                    required>
+                                <option value="Meat">Meat</option>
+                                <option value="Dairy" selected>Dairy</option>
+                                <option value="Vegetables">Vegetables</option>
+                                <option value="Grains">Grains</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <button class="primary" id="predictButton"
+                                type="submit">
+                            ✨ Predict food waste
+                        </button>
+                        <button class="secondary" id="resetButton"
+                                type="button">
+                            Reset form
+                        </button>
+                    </div>
+
+                    <p class="loading-note" id="loadingNote" hidden>
+                        Connecting to the SmartServe AI prediction model…
+                        The free server may take a little time to wake up.
+                    </p>
+                </form>
+
+                <div class="error" id="errorBox" role="alert" hidden>
+                    <strong>Unable to make prediction</strong><br>
+                    <span id="errorText"></span>
+                </div>
+
+                <div class="result" id="resultBox" aria-live="polite" hidden>
+                    <div class="result-top">
+                        <div class="result-title">Estimated food waste</div>
+                        <span class="pill low" id="statusPill">Low waste</span>
+                    </div>
+
+                    <div class="waste-number" id="predictionValue">
+                        0.00 kg
+                    </div>
+
+                    <div class="result-note">
+                        Estimated by your trained Random Forest model using
+                        the information you entered.
+                    </div>
+
+                    <h3 style="margin-top:24px">💡 Suggested actions</h3>
+                    <ul class="tips" id="tipsList"></ul>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Recent predictions</h3>
+                <p class="panel-description">
+                    Your latest five successful predictions in this browser.
+                </p>
+
+                <div class="table-wrap" id="tableWrap" hidden>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Meals</th>
+                                <th>Waste</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentRows"></tbody>
+                    </table>
+                </div>
+
+                <div class="empty" id="emptyState">
+                    <div style="font-size:32px">📊</div>
+                    <p>No predictions yet.</p>
+                    <p>Complete the form to see your first result here.</p>
+                </div>
+
+                <div class="notice">
+                    <strong>About this dashboard</strong><br>
+                    The status uses demonstration limits: below 10 kg is
+                    Low, 10–25 kg is Moderate, and 25 kg or above is High.
+                    These are not official safety limits. Recent predictions
+                    are saved in this browser, not in a permanent shared
+                    database.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        SmartServe AI · Machine Learning-Based Food Waste Prediction
+        <br><br>
+        Estimates support planning and should be checked against actual
+        canteen records.
+    </footer>
+
+    <script>
+        // Flask ML prediction API hosted on Render.
+        const API_URL =
+            "https://smartserve-ai-kchp.onrender.com/api/predict";
+
+        const STORAGE_KEY = "smartserveAiRecentPredictions";
+
+        const form = document.getElementById("predictionForm");
+        const predictButton = document.getElementById("predictButton");
+        const loadingNote = document.getElementById("loadingNote");
+        const errorBox = document.getElementById("errorBox");
+        const errorText = document.getElementById("errorText");
+        const resultBox = document.getElementById("resultBox");
+        const statusPill = document.getElementById("statusPill");
+        const tipsList = document.getElementById("tipsList");
+        const recentRows = document.getElementById("recentRows");
+
+        function localDateString() {
+            const now = new Date();
+            const local = new Date(
+                now.getTime() - now.getTimezoneOffset() * 60000
+            );
+
+            return local.toISOString().slice(0, 10);
+        }
+
+        function getSavedPredictions() {
+            try {
+                const saved = JSON.parse(
+                    localStorage.getItem(STORAGE_KEY) || "[]"
+                );
+
+                return Array.isArray(saved) ? saved : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function savePrediction(item) {
+            try {
+                const history = getSavedPredictions();
+                history.unshift(item);
+
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(history.slice(0, 5))
+                );
+            } catch (error) {
+                console.warn("Could not save prediction history.", error);
+            }
+
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            const history = getSavedPredictions();
+
+            document.getElementById("totalPredictions").textContent =
+                history.length;
+
+            const average = history.length
+                ? history.reduce(
+                    (sum, item) => sum + Number(item.waste || 0),
+                    0
+                  ) / history.length
+                : 0;
+
+            document.getElementById("averageWaste").textContent =
+                average.toFixed(2) + " kg";
+
+            recentRows.replaceChildren();
+
+            if (history.length === 0) {
+                document.getElementById("tableWrap").hidden = true;
+                document.getElementById("emptyState").hidden = false;
+                return;
+            }
+
+            history.forEach(function(item) {
+                const row = document.createElement("tr");
+
+                [
+                    item.date,
+                    item.meals,
+                    Number(item.waste).toFixed(2) + " kg"
+                ].forEach(function(value) {
+                    const cell = document.createElement("td");
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                const statusCell = document.createElement("td");
+                const pill = document.createElement("span");
+
+                pill.className = "pill " + (item.status_class || "low");
+                pill.textContent = item.status || "Unknown";
+
+                statusCell.appendChild(pill);
+                row.appendChild(statusCell);
+                recentRows.appendChild(row);
+            });
+
+            document.getElementById("tableWrap").hidden = false;
+            document.getElementById("emptyState").hidden = true;
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorBox.hidden = false;
+        }
+
+        function hideMessages() {
+            errorBox.hidden = true;
+            resultBox.hidden = true;
+            errorText.textContent = "";
+        }
+
+        function showResult(data) {
+            document.getElementById("predictionValue").textContent =
+                Number(data.prediction).toFixed(2) + " kg";
+
+            statusPill.textContent = data.status + " waste";
+            statusPill.className = "pill " + data.status_class;
+
+            tipsList.replaceChildren();
+
+            (Array.isArray(data.tips) ? data.tips : []).forEach(
+                function(tip) {
+                    const li = document.createElement("li");
+                    li.textContent = tip;
+                    tipsList.appendChild(li);
+                }
+            );
+
+            resultBox.hidden = false;
+        }
+
+        // Set today's date and show saved dashboard data.
+        document.getElementById("date").value = localDateString();
+        renderDashboard();
+
+        // Send the form data to the real Flask ML model.
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            hideMessages();
+
+            if (!form.reportValidity()) {
+                return;
+            }
+
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData.entries());
+
+            payload.meals_served = Number(payload.meals_served);
+            payload.kitchen_staff = Number(payload.kitchen_staff);
+            payload.temperature_C = Number(payload.temperature_C);
+            payload.humidity_percent = Number(payload.humidity_percent);
+            payload.past_waste_kg = Number(payload.past_waste_kg);
+
+            predictButton.disabled = true;
+            predictButton.textContent = "Predicting…";
+            loadingNote.hidden = false;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                let data;
+
+                try {
+                    data = await response.json();
+                } catch (error) {
+                    throw new Error(
+                        "The prediction server returned an unexpected " +
+                        "response. Please try again."
+                    );
+                }
+
+                if (!response.ok || data.success === false) {
+                    throw new Error(
+                        data.error ||
+                        "The prediction request failed. Please check your inputs."
+                    );
+                }
+
+                if (
+                    typeof data.prediction !== "number" ||
+                    !data.status ||
+                    !data.status_class
+                ) {
+                    throw new Error(
+                        "The server responded, but the prediction result " +
+                        "was incomplete. Please check the Render API code."
+                    );
+                }
+
+                showResult(data);
+
+                savePrediction({
+                    date: payload.date,
+                    meals: payload.meals_served,
+                    waste: data.prediction,
+                    status: data.status,
+                    status_class: data.status_class
+                });
+
+            } catch (error) {
+                const message = error && error.message
+                    ? error.message
+                    : "Unable to connect to the prediction server.";
+
+                if (
+                    message.includes("Failed to fetch") ||
+                    message.includes("NetworkError")
+                ) {
+                    showError(
+                        "Could not connect to Render. The free server may " +
+                        "be waking up. Wait about a minute and try again. " +
+                        "If the problem continues, check the API and CORS settings."
+                    );
+                } else {
+                    showError(message);
+                }
+
+            } finally {
+                predictButton.disabled = false;
+                predictButton.textContent = "✨ Predict food waste";
+                loadingNote.hidden = true;
+            }
+        });
+
+        // Reset the form without deleting saved prediction history.
+        document.getElementById("resetButton").addEventListener(
+            "click",
+            function() {
+                form.reset();
+                document.getElementById("date").value = localDateString();
+                hideMessages();
+            }
+        );
+    </script>
+</body>
+</html>
